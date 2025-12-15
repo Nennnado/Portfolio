@@ -92,6 +92,7 @@ POST /api/v3/orders
 | `requires_approval` | `requiresApproval` (`true / false`)                       |
 
 4. Связь заказа с сообщениями
+
 4.1. Для каждого идентификатора из массива defectIds создать запись в таблице ORDER_DEFECTS:
 
 | Поле          | Значение                        |
