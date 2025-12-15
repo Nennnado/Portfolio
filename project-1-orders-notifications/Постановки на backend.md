@@ -281,17 +281,13 @@
 
 ### Алгоритм работы метода получения списка заказов
 
-При вызове метода выполняется следующая последовательность действий.
-
 1. Проверка параметров пагинации
 
-1.1. Проверить входные значения page и size.
-Допустимы только значения больше 0.
+1.1. Проверить входные значения page и size. Допустимы только значения больше 0.
 
-1.2. Если проверка не пройдена, вернуть ошибку:
-«Некорректный запрос данных».
+1.2. Если проверка не пройдена, вернуть ошибку «Некорректный запрос данных».
 
-1.3. Рассчитать смещение (offset) для пагинации по формуле:
+1.3. Рассчитать смещение (offset) по формуле:
 offset = (page − 1) * size.
 
 1.4. Выбрать size записей, пропустив offset записей.
@@ -354,40 +350,37 @@ STATUS.id = ORDERS.id_status
 5. Работа с дефектами
 
 5.1. Если заказ связан с дефектом (ORDERS.defect_id), вернуть:
-
-defectId — DEFECTS.id
-
-defectNumber — DEFECTS.defect_number
+defectId, defectNumber.
 
 5.2. Если заказ связан с несколькими дефектами через ORDER_DEFECTS,
-вернуть массив defects:
-
-defectId
-
-defectNumber
+вернуть массив defects с полями defectId, defectNumber.
 
 6. Дополнительные вычисляемые поля
 
-6.1. equipKindId — EQUIPMENT.kind_id
-6.2. equipKindName — EQUIPMENT_KINDS_T.name
-6.3. createDate — ORDERS.create_date
-6.4. planDuration — разница между ORDERS.end_date и ORDERS.start_date
-6.5. actualDuration — ORDERS.actual_duration
+6.1. equipKindId — EQUIPMENT.kind_id.
+
+6.2. equipKindName — EQUIPMENT_KINDS_T.name.
+
+6.3. createDate — ORDERS.create_date.
+
+6.4. planDuration — разница между ORDERS.end_date и ORDERS.start_date.
+
+6.5. actualDuration — ORDERS.actual_duration.
 
 7. Исполнители и трудозатраты
 
 7.1. hasExecutor — признак наличия исполнителей, если существует связка
-Заказ → Операция → Исполнитель.
+«Заказ → Операция → Исполнитель».
 
-7.2. planMen — сумма OPERATION.executor_number по всем операциям заказа.
+7.2. planMen — сумма OPERATION.executor_number по операциям заказа.
 
-7.3. planTime — сумма OPERATION.work_duration по всем операциям заказа.
+7.3. planTime — сумма OPERATION.work_duration по операциям заказа.
 
 7.4. countMen — количество исполнителей, назначенных на операции заказа.
 
 8. Фильтрация данных
 
-При наличии входных параметров фильтрации учитывать их при выборке:
+При наличии параметров фильтрации учитывать их при выборке:
 
 8.1. planGroupId — ORDERS.plangroup_id
 8.2. plantId — ORDERS.plant_id
@@ -398,7 +391,7 @@ defectNumber
 8.7. orderTypeId — ORDERS.order_type_id
 8.8. actTypeId — ORDERS.id_job_code
 8.9. workCenterId — ORDERS.work_center_id
-8.10. equipmentKind — через связь с EQUIPMENT.kind_id
+8.10. equipmentKind — через EQUIPMENT.kind_id
 8.11. orderNumber — ORDERS.id
 8.12. defectNumber — ORDERS.defect_id
 8.13. startDate — ORDERS.start_date >= startDate
@@ -409,37 +402,28 @@ defectNumber
 
 9. Агрегированные показатели
 
-9.1. total — количество записей, возвращённых в ответе.
-9.2. totalAll — общее количество записей с учётом фильтров (без statusId).
-9.3. totalCurrent — заказы не в статусах «Выполнено» и «Отклонен».
-9.4. totalExpired — просроченные заказы по заданным условиям.
+9.1. total — количество записей в ответе.
+9.2. totalAll — количество записей с учётом фильтров (без statusId).
+9.3. totalCurrent — заказы не в статусах «Выполнено», «Отклонен».
+9.4. totalExpired — просроченные заказы.
 9.5. totalDone — заказы со статусом «Выполнено».
 9.6. page — номер страницы.
-9.7. size — количество записей на странице.
+9.7. size — количество записей.
 
 10. Сортировка
 
-10.1. Если переданы параметры sort и sortType, выполнить сортировку:
+10.1. Если переданы sort и sortType, выполнить сортировку по полю:
+orderNumber, statusId, priorityOrderId, startDate.
 
-orderNumber — по ORDERS.order_number
-
-statusId — по ORDERS.status_id
-
-priorityOrderId — по ORDERS.priority_id
-
-startDate — по ORDERS.start_date
-
-10.2. sortType = asc — по возрастанию.
-10.3. sortType = desc — по убыванию.
+10.2. asc — по возрастанию, desc — по убыванию.
 
 11. Обработка ошибок
 
-11.1. Если входные параметры некорректны — вернуть ошибку:
-«Не удалось получить данные».
+11.1. Некорректные параметры — ошибка «Не удалось получить данные».
 
-11.2. Если переданы некорректные необязательные параметры — вернуть сообщение:
+11.2. Некорректные необязательные параметры —
 «Переданы некорректные параметры. Необходимо передать userId.»
 
 12. Дополнительные поля
 
-12.1. requiresApproval — значение поля ORDERS.requires_approval.
+12.1. requiresApproval — значение ORDERS.requires_approval.
