@@ -281,106 +281,77 @@
 
 ### Алгоритм работы метода получения списка заказов
 
-1. Проверка параметров пагинации
+1.1. Проверить входные значения `page` и `size`.  
+Допустимы только значения больше 0.
 
-1.1. Проверить входные значения page и size. Допустимы только значения больше 0.
+1.2. Если проверка не пройдена, вернуть ошибку:  
+**«Некорректный запрос данных»**.
 
-1.2. Если проверка не пройдена, вернуть ошибку «Некорректный запрос данных».
+1.3. Рассчитать смещение (offset) по формуле:  
+`offset = (page − 1) * size`.
 
-1.3. Рассчитать смещение (offset) по формуле:
-offset = (page − 1) * size.
+1.4. Выбрать `size` записей, пропустив `offset` записей.
 
-1.4. Выбрать size записей, пропустив offset записей.
-
-2. Анализ параметров дат
-
-2.1. Проанализировать входные параметры startDate и endDate.
+2.1. Проанализировать входные параметры `startDate` и `endDate`.
 
 2.2. Если заполнены оба параметра — перейти к п.3.
 
 2.3. Если параметры не заполнены — перейти к п.4.
 
-3. Формирование списка заказов по периоду
+3.1. Сформировать массив объектов `Orders` в соответствии с параметрами пагинации.
 
-3.1. Сформировать массив объектов Orders в соответствии с параметрами пагинации.
+3.2. Собрать уникальные значения `ORDERS.id`, где `ORDERS.start_date` входит в период `<startDate, endDate>`.
 
-3.2. Собрать уникальные значения ORDERS.id, где
-ORDERS.start_date входит в период <startDate, endDate>.
+3.3. Собрать уникальные значения `ORDERS.id`, где `ORDERS.create_date` входит в период `<createDateFrom, createDateTo>`.
 
-3.3. Собрать уникальные значения ORDERS.id, где
-ORDERS.create_date входит в период <createDateFrom, createDateTo>.
+3.4. Собрать уникальные значения `ORDERS.id`, где `ORDERS.start_date < текущая дата`.
 
-3.4. Собрать уникальные значения ORDERS.id, где
-ORDERS.start_date < текущая дата.
+4.1. `id` — `ORDERS.id`  
+4.2. `orderNumber` — `ORDERS.order_number`  
+4.3. `orderName` — `ORDERS.order_name`  
+4.4. `orderTypeId` — `ORDERS.id_order_type`  
+4.5. `orderTypeName` — `ORDER_TYPE.order_name`, где `ORDER_TYPE.object_type = ORDERS.id_order_type`  
+4.6. `statusId` — `ORDERS.id_status`  
+4.7. `statusName` — `STATUS.status_name`, где `STATUS.id = ORDERS.id_status`  
+4.8. `equipmentId` — `ORDERS.id_equip`  
+4.9. `equipmentName` — `EQUIPMENT.eq_name`  
+4.10. `eqCode` — `EQUIPMENT.eq_code`  
+4.11. `startDate` — `ORDERS.start_date`  
+4.12. `endDate` — `ORDERS.end_date`  
+4.13. `actualStart` — `ORDERS.actual_start`  
+4.14. `actualEnd` — `ORDERS.actual_end`  
+4.15. `priorityOrderId` — `ORDERS.priority_id`  
+4.16. `priorityOrderName` — `PRIORITIES.priority_name`  
+4.17. `planGroupId` — `ORDERS.plangroup_id`  
+4.18. `planGroupName` — `PLANGROUPS_T.name`  
+4.19. `actTypeId` — `ORDERS.id_job_code`  
+4.20. `actTypeName` — `ORDER_TYPES.job_name`  
+4.21. `plantId` — `ORDERS.plant_id`  
+4.22. `plantName` — `PLANTS_T.name`  
+4.23. `workCenterId` — `ORDERS.work_center_id`  
+4.24. `workCenterName` — `WORK_CENTERS_T.name`  
+4.25. `techPlaceId` — `ORDERS.tp_id`  
+4.26. `techPlaceName` — `TECH_PLACES_T.name`  
+4.27. `techPlaceCode` — `TECH_PLACE.tp_code`
 
-4. Формирование данных заказа
+5.1. Если заказ связан с дефектом (`ORDERS.defect_id`), вернуть:  
+- `defectId`  
+- `defectNumber`
 
-Для каждого найденного заказа вернуть следующие значения:
+5.2. Если заказ связан с несколькими дефектами через `ORDER_DEFECTS`, вернуть массив `defects` с полями:  
+- `defectId`  
+- `defectNumber`
 
-4.1. id — ORDERS.id
-4.2. orderNumber — ORDERS.order_number
-4.3. orderName — ORDERS.order_name
-4.4. orderTypeId — ORDERS.id_order_type
-4.5. orderTypeName — ORDER_TYPE.order_name, где
-ORDER_TYPE.object_type = ORDERS.id_order_type
-4.6. statusId — ORDERS.id_status
-4.7. statusName — STATUS.status_name, где
-STATUS.id = ORDERS.id_status
-4.8. equipmentId — ORDERS.id_equip
-4.9. equipmentName — EQUIPMENT.eq_name
-4.10. eqCode — EQUIPMENT.eq_code
-4.11. startDate — ORDERS.start_date
-4.12. endDate — ORDERS.end_date
-4.13. actualStart — ORDERS.actual_start
-4.14. actualEnd — ORDERS.actual_end
-4.15. priorityOrderId — ORDERS.priority_id
-4.16. priorityOrderName — PRIORITIES.priority_name
-4.17. planGroupId — ORDERS.plangroup_id
-4.18. planGroupName — PLANGROUPS_T.name
-4.19. actTypeId — ORDERS.id_job_code
-4.20. actTypeName — ORDER_TYPES.job_name
-4.21. plantId — ORDERS.plant_id
-4.22. plantName — PLANTS_T.name
-4.23. workCenterId — ORDERS.work_center_id
-4.24. workCenterName — WORK_CENTERS_T.name
-4.25. techPlaceId — ORDERS.tp_id
-4.26. techPlaceName — TECH_PLACES_T.name
-4.27. techPlaceCode — TECH_PLACE.tp_code
+6.1. `equipKindId` — `EQUIPMENT.kind_id`  
+6.2. `equipKindName` — `EQUIPMENT_KINDS_T.name`  
+6.3. `createDate` — `ORDERS.create_date`  
+6.4. `planDuration` — разница между `ORDERS.end_date` и `ORDERS.start_date`  
+6.5. `actualDuration` — `ORDERS.actual_duration`
 
-5. Работа с дефектами
-
-5.1. Если заказ связан с дефектом (ORDERS.defect_id), вернуть:
-defectId, defectNumber.
-
-5.2. Если заказ связан с несколькими дефектами через ORDER_DEFECTS,
-вернуть массив defects с полями defectId, defectNumber.
-
-6. Дополнительные вычисляемые поля
-
-6.1. equipKindId — EQUIPMENT.kind_id.
-
-6.2. equipKindName — EQUIPMENT_KINDS_T.name.
-
-6.3. createDate — ORDERS.create_date.
-
-6.4. planDuration — разница между ORDERS.end_date и ORDERS.start_date.
-
-6.5. actualDuration — ORDERS.actual_duration.
-
-7. Исполнители и трудозатраты
-
-7.1. hasExecutor — признак наличия исполнителей, если существует связка
-«Заказ → Операция → Исполнитель».
-
-7.2. planMen — сумма OPERATION.executor_number по операциям заказа.
-
-7.3. planTime — сумма OPERATION.work_duration по операциям заказа.
-
-7.4. countMen — количество исполнителей, назначенных на операции заказа.
-
-8. Фильтрация данных
-
-При наличии параметров фильтрации учитывать их при выборке:
+7.1. `hasExecutor` — признак наличия исполнителей, если существует связка «Заказ → Операция → Исполнитель»  
+7.2. `planMen` — сумма `OPERATION.executor_number` по операциям заказа  
+7.3. `planTime` — сумма `OPERATION.work_duration` по операциям заказа  
+7.4. `countMen` — количество исполнителей, назначенных на операции заказа
 
 8.1. `planGroupId` — `ORDERS.plangroup_id`  
 8.2. `plantId` — `ORDERS.plant_id`  
@@ -400,30 +371,21 @@ defectId, defectNumber.
 8.16. `actualStart` — `ORDERS.actual_start`  
 8.17. `actualEnd` — `ORDERS.actual_end`
 
-9. Агрегированные показатели
+9.1. `total` — количество записей в ответе  
+9.2. `totalAll` — количество записей с учётом фильтров (без `statusId`)  
+9.3. `totalCurrent` — заказы не в статусах «Выполнено», «Отклонен»  
+9.4. `totalExpired` — просроченные заказы  
+9.5. `totalDone` — заказы со статусом «Выполнено»  
+9.6. `page` — номер страницы  
+9.7. `size` — количество записей
 
-9.1. total — количество записей в ответе.
-9.2. totalAll — количество записей с учётом фильтров (без statusId).
-9.3. totalCurrent — заказы не в статусах «Выполнено», «Отклонен».
-9.4. totalExpired — просроченные заказы.
-9.5. totalDone — заказы со статусом «Выполнено».
-9.6. page — номер страницы.
-9.7. size — количество записей.
+10.1. Если переданы `sort` и `sortType`, выполнить сортировку по полям:  
+`orderNumber`, `statusId`, `priorityOrderId`, `startDate`  
 
-10. Сортировка
+10.2. `asc` — по возрастанию  
+10.3. `desc` — по убыванию
 
-10.1. Если переданы sort и sortType, выполнить сортировку по полю:
-orderNumber, statusId, priorityOrderId, startDate.
+11.1. Некорректные параметры — ошибка **«Не удалось получить данные»**  
+11.2. Некорректные необязательные параметры — **«Переданы некорректные параметры. Необходимо передать userId.»**
 
-10.2. asc — по возрастанию, desc — по убыванию.
-
-11. Обработка ошибок
-
-11.1. Некорректные параметры — ошибка «Не удалось получить данные».
-
-11.2. Некорректные необязательные параметры —
-«Переданы некорректные параметры. Необходимо передать userId.»
-
-12. Дополнительные поля
-
-12.1. requiresApproval — значение ORDERS.requires_approval.
+12.1. `requiresApproval` — значение `ORDERS.requires_approval`
