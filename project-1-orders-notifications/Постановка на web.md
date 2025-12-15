@@ -42,27 +42,30 @@
 Информацию о добавленных операциях хранить локально на фронте в формате JSON. Перед вызовом метода `POST` передавать массив `operations`.  
 
 Пример структуры:
-"operations": [
-  {
-    "operationName": "наименование операции",
-    "operationDescription": "описание операции",
-    "operationTypeId": "ИД типа операции",
-    "workDuration": "трудоемкость",
-    "startDate": "запланированная дата начала",
-    "endDate": "запланированная дата окончания",
-    "measpoints": [
-      {
-        "measpointsId": "id точки измерения"
-      }
-    ],
-    "materials": [
-      {
-        "materialId": "ИД материала",
-        "planQuantity": "количество материалов"
-      }
-    ]
-  }
-]
+{
+  "operations": [
+    {
+      "operationName": "наименование операции",
+      "operationDescription": "описание операции",
+      "operationTypeId": "ИД типа операции",
+      "workDuration": "трудоемкость",
+      "startDate": "запланированная дата начала",
+      "endDate": "запланированная дата окончания",
+      "measpoints": [
+        {
+          "measpointsId": "id точки измерения"
+        }
+      ],
+      "materials": [
+        {
+          "materialId": "ИД материала",
+          "planQuantity": "количество материалов"
+        }
+      ]
+    }
+  ]
+}
+
 
 
 ---
