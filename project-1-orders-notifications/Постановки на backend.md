@@ -382,23 +382,23 @@ defectId, defectNumber.
 
 При наличии параметров фильтрации учитывать их при выборке:
 
-8.1. planGroupId — ORDERS.plangroup_id
-8.2. plantId — ORDERS.plant_id
-8.3. statusId — ORDERS.status_id
-8.4. priorityId — ORDERS.priority_id
-8.5. equipmentId — ORDERS.id_equip
-8.6. techPlaceId — ORDERS.tp_id
-8.7. orderTypeId — ORDERS.order_type_id
-8.8. actTypeId — ORDERS.id_job_code
-8.9. workCenterId — ORDERS.work_center_id
-8.10. equipmentKind — через EQUIPMENT.kind_id
-8.11. orderNumber — ORDERS.id
-8.12. defectNumber — ORDERS.defect_id
-8.13. startDate — ORDERS.start_date >= startDate
-8.14. endDate — ORDERS.start_date <= endDate
-8.15. closeDate — ORDERS.end_date <= closeDate
-8.16. actualStart — ORDERS.actual_start
-8.17. actualEnd — ORDERS.actual_end
+8.1. `planGroupId` — `ORDERS.plangroup_id`  
+8.2. `plantId` — `ORDERS.plant_id`  
+8.3. `statusId` — `ORDERS.status_id`  
+8.4. `priorityId` — `ORDERS.priority_id`  
+8.5. `equipmentId` — `ORDERS.id_equip`  
+8.6. `techPlaceId` — `ORDERS.tp_id`  
+8.7. `orderTypeId` — `ORDERS.order_type_id`  
+8.8. `actTypeId` — `ORDERS.id_job_code`  
+8.9. `workCenterId` — `ORDERS.work_center_id`  
+8.10. `equipmentKind` — через `EQUIPMENT.kind_id`  
+8.11. `orderNumber` — `ORDERS.id`  
+8.12. `defectNumber` — `ORDERS.defect_id`  
+8.13. `startDate` — `ORDERS.start_date >= startDate`  
+8.14. `endDate` — `ORDERS.start_date <= endDate`  
+8.15. `closeDate` — `ORDERS.end_date <= closeDate`  
+8.16. `actualStart` — `ORDERS.actual_start`  
+8.17. `actualEnd` — `ORDERS.actual_end`
 
 9. Агрегированные показатели
 
