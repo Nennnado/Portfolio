@@ -210,3 +210,43 @@
 **Дополнительные параметры**  
 - Плановая продолжительность: `planDuration`  
 - Фактическая продолжительность: `actualDuration`
+
+
+### 2.2. Редактирование заголовков заказа
+
+**Метод:** `PATCH /api/v2/orders/{orderId}`  
+**Триггер вызова:** Нажатие на кнопку «Сохранить» в модальном окне «Редактирование заказа ТОРО»  
+**Доп. методы:**  
+`GET /api/v1/types/`, `GET /api/v1/techplaces/sectors/`, `GET /api/v1/equipments/sectors/`, `GET /api/v1/priorities`, `GET /api/v1/statuses`, `GET api/v1/measpoints/{equipId}`, `GET /api/v1/plants`, `GET /api/v1/sectors`, `GET /api/v1/materials/plants/`, `GET /api/v1/operationTypes`, список групп плановиков  
+
+**Триггер для вызова доп. методов:** переход в модальное окно редактирования заказа  
+
+---
+
+#### Входные параметры
+
+**path-параметры:**
+
+| Параметр | Описание |
+|----------|----------|
+| orderId  | Id заказа на плашку которого нажали |
+
+**Body-параметры:**
+
+| №  | Параметр       | Тип данных | Описание |
+|----|----------------|-----------|----------|
+| 1  | orderName      | string    | Значение из поля «Наименование заказа» |
+| 2  | id_status      | int       | 1. В GET /api/v1/statuses найти id=1 и shortName, предзаполнить поле «Статус». <br>2. Передать значение id=1 |
+| 3  | orderTypeId    | int       | 1. В поле «Вид заказа» выпадающим списком отобразить все значения `types.orderType` из GET /api/v1/types/. <br>2. Передать `types.id` выбранного значения |
+| 4  | actTypeId      | int       | 1. В поле «Вид работ» выбрать `jobs.jobCode` из GET /api/v1/types/ где `jobs.parentId = types.id`. <br>2. Передать `jobs.id` |
+| 5  | plantId        | int       | 1. В поле «Завод» выбрать `plants_t.name` из GET /api/v1/plants. <br>2. Передать `id` выбранного значения |
+| 7  | planGroupId    | int       | Отложили, поле необязательное, не заполняем |
+| 8  | techPlaceId    | int       | 1. В поле «Техническое место» выбрать `tpCode` из GET /api/v1/techplaces/sectors/. <br>2. Передать id выбранного `tpName` и `tpCode` |
+| 9  | equipmentId    | int       | 1. В поле «Оборудование» выбрать `equipmentCode` из GET /api/v1/equipments/sectors/. <br>2. Передать id выбранного `equipmentCode` |
+| 10 | priorityId     | int       | 1. В поле «Приоритет» выбрать `prName` из GET /api/v1/priorities/. <br>2. Передать id выбранного значения |
+| 11 | startDate      | date      | Значение из поля «Запланированная дата начала» и «Запланированное время начала» |
+| 12 | endDate        | date      | Значение из поля «Запланированная дата окончания». Проверка: дата окончания >= дата начала |
+| 13 | defectNumber   | int       | 1. Если перешли с дефекта, найти `defects.id` из GET /api/v1/defects/ и предзаполнить поле «Номер дефекта». <br>2. Передать id. <br>3. Если переход другой — поле не заполняется |
+
+---
+
