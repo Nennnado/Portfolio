@@ -392,4 +392,96 @@
 
 12.1. `requiresApproval` — значение `ORDERS.requires_approval`
 
+### POST `api/v1/operations/add` — метод создания операции
+
+**Описание:** Данный метод создает операции к заказу.
+
+---
+
+#### Входные параметры
+
+**IMPORT:**
+
+| № | Имя параметра  | Тип           | Обязательное | Описание |
+|---|----------------|---------------|--------------|----------|
+| 1 | orderId        | int           | да           | Id заказа, к которому добавляем операции |
+| 2 | techCard       | object        | нет          | Объект тех карты |
+| 2.1 | techCardId    | int           | нет          | Идентификатор тех карты |
+| 2.1 | operationIds  | array (int)   | нет          | Идентификатор операции |
+| 3 | operation      | object        |              | Объект операций |
+
+**Параметры объекта `operation`:**
+
+| Параметр              | Тип          | Обязательное | Описание |
+|-----------------------|-------------|--------------|----------|
+| operationName         | string      | да           | Наименование операции |
+| operationDescription  | string      | да           | Описание операции |
+| operationTypeId       | int         | да           | ИД типа операции |
+| workDuration          | string      | да           | Трудоемкость |
+| executorNumber        | string      | да           | Количество исполнителей |
+| specTitleId           | int         | нет          | Должность |
+| equipmentId           | int         | нет          | Оборудование |
+| startDate             | timestamp   | да           | Запланированная дата начала |
+| endDate               | timestamp   | да           | Запланированная дата окончания |
+| requiresApproval      | boolean     | нет          | Идентификатор операции, требующей проверки |
+| measpoints            | array (int) | нет          | Список точек измерения |
+| measpointsId          | int         | да           | Id точки измерения |
+| materials             | array (object) | нет       | Список материалов |
+| materialId            | int         | да           | Id материала |
+| planQuantity          | int         | да           | Количество материалов |
+
+---
+
+**EXPORT:**
+
+| Параметр           | Тип  | Описание |
+|-------------------|------|----------|
+| operationId        | int  | Идентификатор операции |
+| orderId            | int  | Идентификатор заказа |
+| errorDescription   | string | Описание ошибки |
+
+---
+
+### Логика метода
+
+1. Проверить значение поля `operationTypeId`:
+   - Если `operationTypeId == 1` — проверить массив `materials`. Если пустой — ошибка: `"Заполните обязательные поля"`.
+   - Если `operationTypeId == 2` — проверить массив `measpoints`. Если пустой — ошибка: `"Заполните обязательные поля"`.
+
+2. В таблицу `OPERATIONS` записать:
+
+   - `id` — уникальный идентификатор записи  
+   - `order_id` — входное значение `orderId`  
+   - `id_tp` — `ORDER/id_tp`, где `ORDER/id == orderId`  
+   - `id_eq` — `ORDER/id_equip`, где `ORDER/id == orderId`  
+   - `status_id` — 7  
+   - `operation_type_id` — `operationTypeId`  
+   - `short_name` — `operationName`  
+   - `full_name` — `operationDescription`  
+   - `work_duration` — `workDuration`  
+   - `spec_title_id` — `specTitleId`  
+   - `equipmentId` — `equipmentId`  
+   - `executor_number` — `executorNumber`  
+   - `start_date` — `startDate`  
+   - `end_date` — `endDate`  
+   - `requires_approval` — `false` если не передан, иначе `true`
+
+3. В таблицу `OPERATIONS_MEAS_POINTS`:
+
+   - `meas_point_id` — `measpointsId`  
+   - `operation_id` — `operationId`  
+   - `create_date` — текущая дата и время
+
+4. В таблицу `OPERATIONS_MATERIALS`:
+
+   - `id` — уникальный идентификатор  
+   - `operationId` — `operationId`  
+   - `create_date` — текущая дата и время  
+   - `id_material` — `materialId`  
+   - `plan_quantity` — `planQuantity`
+
+5. Если передан `techCard` и `techCardId` — создать дублирующие записи в `OPERATIONS`, `OPERATIONS_MEAS_POINTS` и `OPERATIONS_MATERIALS` по аналогии с данными из технической карты.
+
+---
+
 
