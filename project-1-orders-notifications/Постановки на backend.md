@@ -392,7 +392,7 @@
 
 12.1. `requiresApproval` — значение `ORDERS.requires_approval`
 
-### POST `api/v1/operations/add` — метод создания операции
+### 4. POST `api/v1/operations/add` — метод создания операции
 
 **Описание:** Данный метод создает операции к заказу.
 
