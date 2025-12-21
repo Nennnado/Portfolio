@@ -399,7 +399,7 @@ GET api/v1/measpoints
 5.4. `is_deleted` — `true`
 
 
-# 7. Метод создания ДИ
+# 6. Метод создания ДИ
 
 **POST** `api/v1/measdocs/{measdocsId}`  
 
@@ -483,7 +483,7 @@ GET api/v1/measpoints
 - если создано из WEB — `WEB`
 
 
-# 6. Метод получения ДИ
+# 7. Метод получения ДИ
 
 **GET** `api/v1/measdocs/{meas_point}`
 
