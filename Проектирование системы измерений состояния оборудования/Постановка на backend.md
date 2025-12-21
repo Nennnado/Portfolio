@@ -32,17 +32,23 @@
 
 4. В таблицу `MEAS_POINTS` записать следующие значения:
 
-| №   | Поле              | Значение |
-|-----|------------------|----------|
-| 4.1 | id               | Генерируется последовательно автоматически |
-| 4.2 | name             | Входное значение `measpoint_name` |
-| 4.3 | description      | Входное значение `description` |
-| 4.4 | first_value      | Первоначальное значение |
-| 4.5 | range_value_min  | Входное значение `range_value_min` |
-| 4.6 | range_value_max  | Входное значение `range_value_max` |
-| 4.7 | annual_value     | Входное значение `annual` |
-| 4.8 | is_counter       | Входное значение `counter` (`false` или `true`) |
-| 4.9 | characteristic   | Входное значение `char_id` |
+4.1. `id` — генерируется последовательно автоматически  
+
+4.2. `name` — входное значение `measpoint_name`  
+
+4.3. `description` — входное значение `description`  
+
+4.4. `first_value` — первоначальное значение  
+
+4.5. `range_value_min` — входное значение `range_value_min`  
+
+4.6. `range_value_max` — входное значение `range_value_max`  
+
+4.7. `annual_value` — входное значение `annual`  
+
+4.8. `is_counter` — входное значение `counter` (`false` или `true`)  
+
+4.9. `characteristic` — входное значение `char_id`
 
 ---
 
@@ -52,17 +58,23 @@
 
 В таблицу `MEAS_DOCS` записать:
 
-| №   | Поле             | Значение |
-|-----|------------------|----------|
-| 5.1 | id               | Генерируется последовательно автоматически |
-| 5.2 | meas_points      | Передать значение из поля `id` таблицы `MEAS_POINTS` |
-| 5.3 | date             | Передать текущую дату |
-| 5.4 | text             | `null` |
-| 5.5 | value            | Передать входное значение `first_value` |
-| 5.6 | unit_of_measure  | Получить из таблицы `CHARACTERISTIC`, где `id == char_id`, переданному на вход |
-| 5.7 | is_deleted       | `false` |
-| 5.8 | id_creator       | Получить значение из токена авторизации |
-| 5.9 | source           | Подставлять значение **«MAN»** |
+5.1. `id` — генерируется последовательно автоматически  
+
+5.2. `meas_points` — передать значение из поля `id` таблицы `MEAS_POINTS`  
+
+5.3. `date` — передать текущую дату  
+
+5.4. `text` — `null`  
+
+5.5. `value` — передать входное значение `first_value`  
+
+5.6. `unit_of_measure` — в таблице `CHARACTERISTIC` смотреть значения по полю `id == char_id`, переданному на вход. Передать значение из `CHARACTERISTIC/unit_of_measure`  
+
+5.7. `is_deleted` — `false`  
+
+5.8. `id_creator` — получить значение из токена авторизации  
+
+5.9. `source` — подставлять значение в зависимости от того, откуда формимруем ДИ **«MAN»** - если с мобильного приложения, **«WEB»** - если с веб приложения
 
 
 
@@ -121,20 +133,20 @@ GET api/v1/measpoints
 
 Выбрать значения из таблицы MEAS_POINTS где:
 
-MEAS_POINTS/EQUIPMENTS == equipId
+1. MEAS_POINTS/EQUIPMENTS == equipId
 
-MEAS_POINTS/is_deleted == false
+2. MEAS_POINTS/is_deleted == false
 
-Вернуть значения:
+3. Вернуть значения:
 
-id — MEAS_POINTS/id
+4. id — MEAS_POINTS/id
 
-measpoint_name — MEAS_POINTS/name
+5. measpoint_name — MEAS_POINTS/name
 
-char_id — MEAS_POINTS/characteristic
+6. char_id — MEAS_POINTS/characteristic
 
-char_name — CHARACTERISTIC/name
+7. char_name — CHARACTERISTIC/name
 
-char_text — CHARACTERISTIC/text
+8. char_text — CHARACTERISTIC/text
 
-charUnitId — CHARACTERISTIC/unit_of_measure
+9. charUnitId — CHARACTERISTIC/unit_of_measure
