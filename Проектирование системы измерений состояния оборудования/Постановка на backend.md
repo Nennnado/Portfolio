@@ -133,22 +133,105 @@ GET api/v1/measpoints
 
 1.2. Если значение заполнено → переход к п.2
 
-Выбрать значения из таблицы MEAS_POINTS где:
+2. Выбрать значения из таблицы MEAS_POINTS где:
 
-1. MEAS_POINTS/EQUIPMENTS == входному значению equipId
+2.1. MEAS_POINTS/EQUIPMENTS == входному значению equipId
 
-2. MEAS_POINTS/is_deleted == false
+2.2. MEAS_POINTS/is_deleted == false
 
 3. Вернуть значения:
 
-4. id — MEAS_POINTS/id
+3.1. id — MEAS_POINTS/id
 
-5. measpoint_name — MEAS_POINTS/name
+3.2. measpoint_name — MEAS_POINTS/name
 
-6. char_id — MEAS_POINTS/characteristic
+3.3. char_id — MEAS_POINTS/characteristic
 
-7. char_name — CHARACTERISTIC/name
+3.4. char_name — CHARACTERISTIC/name
 
-8. char_text — CHARACTERISTIC/text
+3.5. char_text — CHARACTERISTIC/text
 
-9. charUnitId — CHARACTERISTIC/unit_of_measure
+3.6. charUnitId — CHARACTERISTIC/unit_of_measure
+
+
+# 3. Метод получения ТИ
+
+**GET** `api/v1/measpoints/{measpointId}`  
+
+**Описание:**  
+Данный метод предназначен для получения информации о конкретной точки измерения.
+
+---
+
+## Входные / выходные параметры
+
+### Входные параметры
+
+| №   | Имя          | Тип    | Обязательное | Описание |
+|-----|--------------|--------|--------------|----------|
+| 1.1 | measpointId  | int    | да           | Id точки измерения |
+| 1.2 | lang         | string | нет          | Язык, передаем RU |
+
+---
+
+### Выходные параметры
+
+| №    | Имя              | Тип    | Обязательное | Описание |
+|------|------------------|--------|--------------|----------|
+| 1.1  | id               | int    | да           | Id точки измерения |
+| 1.2  | measpoint_name   | string | да           | Наименование точки измерения |
+| 1.3  | char_id          | int    | да           | Id признака |
+| 1.4  | char_name        | string | да           | Техническое наименование признака |
+| 1.5  | charUnitId       | int    | да           | Id единицы измерения признака |
+| 1.6  | charUnitName     | string | нет          | Наименование единицы измерения признака |
+| 1.7  | description      | string | нет          | Описание к точке измерения |
+| 1.8  | range_value_min  | string | нет          | Минимальное значение диапазона |
+| 1.9  | range_value_max  | string | нет          | Максимальное значение диапазона |
+| 1.10 | annual_value     | string | нет          | Среднее значение по точке измерения за год |
+| 1.11 | errorDescription | string | нет          | Описание ошибки |
+
+---
+
+## Логика метода
+
+При вызове метода выполнять следующую последовательность действий:
+
+1. Проверить входные параметры  
+   1.1. Если значение `measpointId` не заполнено, то выводить ошибку  
+   **«Не заполнен код точки измерения»**  
+   1.2. Если значение заполнено, то переходить к п. 2  
+
+2. Выбрать значения из таблицы `MEAS_POINTS`, где  
+   `MEAS_POINTS/id == входному значению measpointId`  
+   - Если значение не найдено, то выводить ошибку  
+     **«Точка измерения с № (n) не найдена»**
+
+3. Вернуть значения:  
+
+   3.1. `id` — `MEAS_POINTS/id`  
+
+   3.2. `measpoint_name` — `MEAS_POINTS/name`  
+
+   3.3. `char_id` — `MEAS_POINTS/characteristic`, где  
+   `CHARACTERISTIC/id == MEAS_POINTS/characteristic`  
+
+   3.4. `char_name` — `CHARACTERISTIC/name`, где  
+   `CHARACTERISTIC/id == MEAS_POINTS/characteristic`  
+
+   3.5. `char_text` — `CHARACTERISTIC/text`, где  
+   `CHARACTERISTIC/id == MEAS_POINTS/characteristic`  
+
+   3.6. `charUnitId` — `CHARACTERISTIC/unit_of_measure`, где  
+   `CHARACTERISTIC/id == MEAS_POINTS/characteristic`  
+
+   3.7. `charUnitName` — смотреть `UNITS_T/short_name`, для которых  
+   `UNITS_T/unit_id == CHARACTERISTIC/unit_of_measure` из п. 3.6  
+
+   3.8. `description` — `MEAS_POINTS/description`  
+
+   3.9. `range_value_min` — `MEAS_POINTS/range_value_min`  
+
+   3.10. `range_value_max` — `MEAS_POINTS/range_value_max`  
+
+   3.11. `annual_value` — `MEAS_POINTS/annual`
+
